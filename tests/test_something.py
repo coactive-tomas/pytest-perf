@@ -2,5 +2,5 @@ from time import sleep
 
 
 def test_something() -> None:
-    sleep(10)
+    sleep(2)
     assert True
