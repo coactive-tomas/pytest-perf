@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  run:
+    name: On ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest] # [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: eifinger/setup-rye@v2
+        with:
+          enable-cache: true
+
+      - name: Sync dependencies
+        run: rye sync --no-lock
+
+      - name: Check code
+        run: |
+          rye lint
+          rye run check-types
+          
+      - name: Run tests
+        run: rye test
