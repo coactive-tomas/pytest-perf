@@ -41,7 +41,7 @@ jobs:
         run: rye test --  --benchmark-only --benchmark-json output.json
       
       - name: Upload results
-        if: github.event.pull_request.merged == true
+        if: github.ref_name == 'main'
         uses: actions/upload-artifact@v2
         with:
           name: benchmark_results
