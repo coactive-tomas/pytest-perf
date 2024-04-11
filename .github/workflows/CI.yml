@@ -39,7 +39,20 @@ jobs:
       - name: Run benchmarks
         run: rye test --  --benchmark-only --benchmark-json output.json
       
+      - name: Download previous result
+        if: github.event_name == 'pull_request'
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ github.token }}
+          workflow: upload.yml
+          name: benchmark_results
+          path: old_benchmark
+          commit: ${{github.event.pull_request.base.sha}}
+        continue-on-error: true
+
       - name: Publish results
+        if: github.event_name == 'pull_request'
         uses: nils-braun/pytest-benchmark-commenter@v2
         with:
           benchmark-file: output.json
+          comparison-benchmark-file: "old_benchmark/output.json"
