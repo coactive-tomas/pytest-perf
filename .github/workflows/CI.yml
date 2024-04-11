@@ -3,6 +3,8 @@ name: CI
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   run:
@@ -10,6 +12,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
+      pull-requests: write
+      actions: write
     strategy:
       fail-fast: false
       matrix:
@@ -36,7 +40,27 @@ jobs:
       - name: Run benchmarks
         run: rye test --  --benchmark-only --benchmark-json output.json
       
+      - name: Upload results
+        if: github.event.pull_request.merged
+        uses: actions/upload-artifact@v2
+        with:
+          name: benchmark_results
+          path: output.json
+
+      - name: Download previous result
+        if: github.event_name == 'pull_request'
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          github_token: ${{ github.token }}
+          workflow: upload.yml
+          name: benchmark_results
+          path: old_benchmark
+          commit: ${{github.event.pull_request.base.sha}}
+        continue-on-error: true
+
       - name: Publish results
+        if: github.event_name == 'pull_request'
         uses: nils-braun/pytest-benchmark-commenter@v2
         with:
           benchmark-file: output.json
+          comparison-benchmark-file: "old_benchmark/output.json"
