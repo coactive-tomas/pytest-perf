@@ -42,20 +42,19 @@ jobs:
       
       - name: Upload results
         if: github.ref_name == 'main'
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
           name: benchmark_results
           path: output.json
+          retention-days: 90
+          overwrite: true
 
       - name: Download previous result
         if: github.event_name == 'pull_request'
-        uses: dawidd6/action-download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
-          github_token: ${{ github.token }}
-          workflow: upload.yml
           name: benchmark_results
-          path: old_benchmark
-          commit: ${{github.event.pull_request.base.sha}}
+          path: output.json
         continue-on-error: true
 
       - name: Publish results
