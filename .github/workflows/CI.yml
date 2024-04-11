@@ -9,7 +9,7 @@ jobs:
     name: On ${{ startsWith(matrix.os, 'macos-') && 'macOS' || startsWith(matrix.os, 'windows-') && 'Windows' || 'Linux' }}
     runs-on: ${{ matrix.os }}
     permissions:
-      contents: read
+      contents: write
     strategy:
       fail-fast: false
       matrix:
@@ -41,3 +41,4 @@ jobs:
         with:
           tool: 'pytest'
           output-file-path: output.json
+          github-token: ${{ secrets.GITHUB_TOKEN }}
