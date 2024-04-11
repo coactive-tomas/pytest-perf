@@ -67,3 +67,7 @@ ban-relative-imports = "all"
 
 [tool.ruff.lint.flake8-quotes]
 inline-quotes = "double"
+
+[[tool.mypy.overrides]]
+module = ["pytest_benchmark.fixture"]
+ignore_missing_imports = true
