@@ -18,6 +18,7 @@ managed = true
 dev-dependencies = [
     "pytest>=8.1.1",
     "mypy>=1.9.0",
+    "pytest-benchmark>=4.0.0",
 ]
 
 [tool.rye.scripts]
@@ -27,5 +28,42 @@ stop-deamon = "dmypy stop"
 [tool.hatch.metadata]
 allow-direct-references = true
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+xfail_strict = true
+addopts = ["--import-mode=importlib", "--strict-markers"]
+markers = [
+    "fast: mark tests that run fast.",
+    "slow: mark tests that run slowly.",
+    "unit: mark unittest.",
+]
+log_cli = true
+log_cli_level = "INFO"
+log_cli_format = "%(asctime)s [%(levelname)s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"
+
 [tool.hatch.build.targets.wheel]
 packages = ["src/pytest_perf"]
+
+[tool.ruff.lint]
+preview = true
+
+[tool.ruff.lint.flake8-tidy-imports.banned-api]
+enum = { msg = "`enum` is banned: Python enums are not allowed. Use typing.Literal and typing.TypeAlias to build enums" }
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*.py" = ["INP001", "S101", "D"]
+"scripts/*.py" = ["INP001", "D103"]
+"src/customer_engine_api/migrations/**/*.py" = ["D103"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["customer_engine_api"]
+combine-as-imports = true
+required-imports = ["from __future__ import annotations"]
+
+
+[tool.ruff.lint.flake8-tidy-imports]
+ban-relative-imports = "all"
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "double"

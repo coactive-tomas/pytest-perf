@@ -1,2 +1,3 @@
-def hello() -> str:
-    return "Hello from pytest-perf!"
+from . import _cases as cases
+
+__all__ = ["cases"]

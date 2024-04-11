@@ -30,5 +30,8 @@ jobs:
           rye lint
           rye run check-types
           
-      - name: Run tests
-        run: rye test
+      - name: Run no benchmarked tests
+        run: rye test -- --benchmark-skip
+      
+      - name: Run benchmarks
+        run: rye test --  --benchmark-only 

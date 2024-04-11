@@ -17,6 +17,10 @@ packaging==24.0
     # via pytest
 pluggy==1.4.0
     # via pytest
+py-cpuinfo==9.0.0
+    # via pytest-benchmark
 pytest==8.1.1
+    # via pytest-benchmark
+pytest-benchmark==4.0.0
 typing-extensions==4.11.0
     # via mypy
