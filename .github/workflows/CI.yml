@@ -40,6 +40,13 @@ jobs:
       - name: Run benchmarks
         run: rye test --  --benchmark-only --benchmark-json output.json
       
+      - name: Upload results
+        if: github.event.pull_request.merged
+        uses: actions/upload-artifact@v2
+        with:
+          name: benchmark_results
+          path: output.json
+
       - name: Download previous result
         if: github.event_name == 'pull_request'
         uses: dawidd6/action-download-artifact@v2
