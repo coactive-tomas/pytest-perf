@@ -51,10 +51,10 @@ jobs:
 
       - name: Download previous result
         if: github.event_name == 'pull_request'
-        uses: actions/download-artifact@v4
+        uses: dawidd6/action-download-artifact@v3
         with:
           name: benchmark_results
-          path: output.json
+          path: old_benchmark
         continue-on-error: true
 
       - name: Publish results
@@ -62,4 +62,7 @@ jobs:
         uses: nils-braun/pytest-benchmark-commenter@v2
         with:
           benchmark-file: output.json
+          branch: main
+          name: benchmark_results
+          workflow_conclusion: success
           comparison-benchmark-file: "old_benchmark/output.json"
